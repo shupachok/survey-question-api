@@ -5,11 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,13 +24,13 @@ public class SurveyResource {
 		this.surveyService = surveyService;
 	}
 
-	@RequestMapping("/surveys")
+	@GetMapping("/surveys")
 	public List<SurveyDto> retrieveAllSurveys() {
 		List<SurveyDto> serveys = surveyService.retrieveAllSurveys();
 		return serveys;
 	}
 
-	@RequestMapping("/surveys/{surveyId}")
+	@GetMapping("/surveys/{surveyId}")
 	public SurveyDto retrieveSurveysById(@PathVariable Long surveyId) {
 		SurveyDto survey = surveyService.retrieveSurveyById(surveyId);
 		if (survey == null)
@@ -42,7 +38,7 @@ public class SurveyResource {
 		return survey;
 	}
 
-	@RequestMapping("/surveys/{surveyId}/questions")
+	@GetMapping("/surveys/{surveyId}/questions")
 	public List<QuestionDto> retrieveAllQuestionsBySurveyId(@PathVariable Long surveyId) {
 		List<QuestionDto> questions = surveyService.retrieveQuestionsBySurveyId(surveyId);
 		if (questions == null)
@@ -50,7 +46,7 @@ public class SurveyResource {
 		return questions;
 	}
 
-	@RequestMapping("/surveys/{surveyId}/questions/{questionId}")
+	@GetMapping("/surveys/{surveyId}/questions/{questionId}")
 	public QuestionDto retrieveQuestionBySurveyIdAndQuestionId(@PathVariable Long surveyId,
 			@PathVariable Long questionId) {
 		QuestionDto question = surveyService.retrieveQuestion(surveyId, questionId);
@@ -59,7 +55,7 @@ public class SurveyResource {
 		return question;
 	}
 
-	@RequestMapping(value = "/surveys/{surveyId}/questions", method = RequestMethod.POST)
+	@PostMapping("/surveys/{surveyId}/questions")
 	public ResponseEntity<Object> createSurveyQuestion(@PathVariable long surveyId, @RequestBody QuestionWithoutIdDto question) {
 		
 		Long questionId = surveyService.createSurveyQuestion(surveyId, question);
@@ -73,7 +69,7 @@ public class SurveyResource {
 		return ResponseEntity.created(location).build();
 	}
 
-	@RequestMapping(value = "/surveys/{surveyId}/questions/{questionId}", method = RequestMethod.DELETE)
+	@DeleteMapping("/surveys/{surveyId}/questions/{questionId}")
 	public ResponseEntity<Object> deleteQuestionBySurveyIdAndQuestionId(@PathVariable Long surveyId,
 			@PathVariable Long questionId) {
 		Long questionIdDeleted = surveyService.deleteQuestion(surveyId, questionId);
@@ -82,7 +78,7 @@ public class SurveyResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@RequestMapping(value = "/surveys/{surveyId}/questions/{questionId}", method = RequestMethod.PUT)
+	@PutMapping("/surveys/{surveyId}/questions/{questionId}")
 	public ResponseEntity<Object> updateQuestionBySurveyIdAndQuestionId(@PathVariable Long surveyId,
 			@PathVariable Long questionId,@RequestBody QuestionDto question) {
 		Long questionIdUpdated = surveyService.updateQuestion(surveyId, questionId,question);
